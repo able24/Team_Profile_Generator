@@ -13,29 +13,32 @@ const render = require("./src/page-template.js");
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
-function mainPage () {
-   return inquirer.prompt({
-    type: 'list',
-    name: 'choice',
-    message: 'Please choose your employee status',
-    choices: ['Engineer', 'Intern', 'Exit From Application']
-   }).then (data => {
-    switch(data.choice) {
-        case 'Engineer':
-            Engineer();
-            break;
-        
-        case 'Intern':
-            Intern();
-            break;
+function mainPage() {
+    return inquirer.prompt({
+        type: 'list',
+        name: 'choice',
+        message: 'Please choose your employee status',
+        choices: ['Engineer', 'Intern', 'Exit From Application']
+    }).then(data => {
+        switch (data.choice) {
+            case 'Engineer':
+                return Engineer()
+                .then(mainPage);
+            
 
-        case 'Exit From Application':
-            process.exit();
-    }
-   })
+            case 'Intern':
+                return Intern()
+                .then(mainPage);
+                
+
+            case 'Exit From Application':
+                console.log('Thanks for using our app!');
+                process.exit();
+        }
+    })
 };
 
-function init () {
+function init() {
     mainPage();
 }
 
