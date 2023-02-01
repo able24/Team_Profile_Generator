@@ -1,23 +1,29 @@
+// Importing child classes
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 
 
-
+// Importing packages to be used
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
+// Creating path for html file that will be created
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+// Importing the template to generate html files
 const render = require("./src/page-template.js");
 
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 
+// Empty array for storing employee details
 const teamMembers = [];
 
+
+// Function to get manager's details and store in teamMembers array
 const managerDetails = () => {
 
     console.log(
@@ -82,16 +88,16 @@ const managerDetails = () => {
         }
     ])
     .then(details => {
-        const manager = new Manager (details.name, details.id, details.email, details.officeNumber);
-        teamMembers.push(manager);
-        menuPage(); 
+        const manager = new Manager (details.name, details.id, details.email, details.officeNumber); // Creating a new manager object with required details
+        teamMembers.push(manager); // Adding new manager's details to array
+        menuPage(); // Go back to the main page
         //console.log(manager); 
     })
 };
 
 
 
-
+// Function for the main page of the application
 function menuPage() {
     return inquirer.prompt({
         type: 'list',
@@ -111,12 +117,14 @@ function menuPage() {
                 
 
             default:
-                createTeam();
+                createTeam(); // This function calls the render function and adds the teamMember array to generate the html file for display on the browser
         }
     })
 };
 
 
+
+// Function to get engineer's details and store in teamMembers array
 const engineerDetails = () => {
 
     console.log(
@@ -181,14 +189,16 @@ const engineerDetails = () => {
         }
     ])
     .then(details => {
-        const engineer = new Engineer (details.name, details.id, details.email, details.github);
-        teamMembers.push(engineer);
-        menuPage(); 
+        const engineer = new Engineer (details.name, details.id, details.email, details.github); // Creating a new engineer object with all required details
+        teamMembers.push(engineer); // Adding new engineer's details to teamMembers array
+        menuPage(); // Go back to the main page
         //console.log(engineer); 
     })
 };
 
 
+
+// Function to get intern's details and store in teamMembers array
 const internDetails = () => {
 
     console.log(
@@ -241,7 +251,7 @@ const internDetails = () => {
 
         {
             name: 'school',
-            message: "Please enter the intern's github school:",
+            message: "Please enter the intern's school:",
             validate: school => {
                 if  (school) {
                     return true; 
@@ -253,14 +263,15 @@ const internDetails = () => {
         }
     ])
     .then(details => {
-        const intern = new Intern (details.name, details.id, details.email, details.school);
-        teamMembers.push(intern);
-        menuPage(); 
+        const intern = new Intern (details.name, details.id, details.email, details.school); // Creating a new intern object with all the details
+        teamMembers.push(intern); // Add new intern to teamMembers array
+        menuPage(); // Go back to the main page
         //console.log(intern); 
     })
 };
 
 
+// Function to generate html file by passing the teamMembers array into it and writig it to a file in the OUTPUT_DIR path
 const createTeam = () => {
 
     console.log(`
@@ -268,17 +279,21 @@ const createTeam = () => {
                 You have finished building your team!
                 =====================================`);
 
+                // Checking to see if the required directory already exists
                 if (!fs.existsSync(OUTPUT_DIR)) {
                     fs.mkdirSync(OUTPUT_DIR)
                 };
                 
+
+                // Writing the html file by calling the render function and putting it in the required directory
                 fs.writeFileSync(outputPath, render(teamMembers), "utf-8");
 };
 
 
-
+// Function to start the application
 function init() {
     managerDetails();
 }
 
+// Calling the function to start the application
 init();
